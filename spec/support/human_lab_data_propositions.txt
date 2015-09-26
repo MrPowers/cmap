@@ -1,0 +1,5 @@
+Human Lab Data	age < 12	kids
+Human Lab Data	age > 65	seniors
+Human Lab Data	nationality = 'american'	american
+seniors	seniors = 1 and american = 1	senior_americans
+american	seniors = 1 and american = 1	senior_americans
