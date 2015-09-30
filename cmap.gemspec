@@ -24,4 +24,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec"
 
   spec.add_dependency "pg", "0.18.3"
+  spec.add_dependency "pry"
+  spec.add_dependency "simple-graph"
 end
