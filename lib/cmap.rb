@@ -3,7 +3,6 @@ require "cmap/version"
 require 'csv'
 require 'pg'
 require 'pry'
-require 'simple-graph'
 
 require_relative "./cmap/job_runner.rb"
 require_relative "./cmap/edge.rb"
