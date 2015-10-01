@@ -14,15 +14,11 @@ module Cmap; class GraphToSql
     end
   end
 
+  def connection
+    @connection ||= PGconn.connect(db_config)
+  end
+
   private
-
-  def ordered_edges
-    graph.edges.sort_by {|e| graph.shortest_path(table_name, e.destination_vertex).length}
-  end
-
-  def unique_edges
-    ordered_edges.uniq {|e| [e.value, e.destination_vertex]}
-  end
 
   def edge_to_query(edge)
     column = edge.destination_vertex
@@ -31,15 +27,10 @@ module Cmap; class GraphToSql
   end
 
   def queries
-    r = []
-    unique_edges.each do |edge|
-      r.push(edge_to_query(edge))
+    graph.ordered_edges.inject([]) do |memo, edge|
+      memo.push(edge_to_query(edge))
+      memo
     end
-    r
-  end
-
-  def connection
-    @connection ||= PGconn.connect(db_config)
   end
 
 end; end

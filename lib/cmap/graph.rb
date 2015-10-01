@@ -1,18 +1,5 @@
 module Cmap
 
-  class Edge
-
-    attr_reader :origin_vertex, :destination_vertex, :value
-
-    def initialize(origin_vertex, value, destination_vertex)
-      @origin_vertex = origin_vertex
-      @destination_vertex = destination_vertex
-      @value = value
-    end
-
-  end
-
-
   class Graph
 
     attr_reader :vertices, :edges
@@ -22,23 +9,52 @@ module Cmap
       @edges = edges
     end
 
-    def shortest_path(origin_vertex, destination_vertex)
-      simple_graph.shortest_path(origin_vertex, destination_vertex)
+    def children(vertex)
+      edges.select {|e| e.origin_vertex == vertex}.map{|e| e.destination_vertex}
     end
+
+    def vertices_and_children
+      vertices.map {|v| [v, children(v)]}
+    end
+
+    def job_runner
+      runner = JobRunner.new
+      vertices_and_children.each do |v, c|
+        runner.add(v, c)
+      end
+      runner
+    end
+
+    def vertices_execution_path
+      job_runner.execution_path
+    end
+
+    def ordered_edges
+      job_runner.execution_path.inject([]) do |memo, v|
+        edge = edges.find {|e| e.destination_vertex == v}
+        memo << edge if edge
+        memo
+      end
+    end
+
+    #def shortest_path(origin_vertex, destination_vertex)
+      #simple_graph.shortest_path(origin_vertex, destination_vertex)
+    #end
 
     private
 
-    def simple_graph
-      graph = SimpleGraph::Graph.new
-      vertices.each do |v|
-        graph.add_vertex(v)
-      end
-      edges.each do |e|
-        graph.add_edge(e.origin_vertex, e.destination_vertex)
-      end
-      graph
-    end
+    #def simple_graph
+      #graph = SimpleGraph::Graph.new
+      #vertices.each do |v|
+        #graph.add_vertex(v)
+      #end
+      #edges.each do |e|
+        #graph.add_edge(e.origin_vertex, e.destination_vertex)
+      #end
+      #graph
+    #end
 
   end
+
 
 end

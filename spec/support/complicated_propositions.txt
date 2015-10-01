@@ -1,0 +1,8 @@
+human_lab_data	age < 12	kids
+seniors	seniors = 1 and american = 1	senior_americans
+human_lab_data	nationality = 'american'	american
+american	american = 1	american_parent_has
+american_parent_has	kids=1 AND american_parent_has =1	kids_with_american_parents
+kids	kids=1 AND american_parent_has =1	kids_with_american_parents
+human_lab_data	age > 65	seniors
+american	seniors = 1 and american = 1	senior_americans

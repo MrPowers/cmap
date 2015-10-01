@@ -14,7 +14,7 @@ module Cmap; describe PropositionsToGraph do
     it "creates a graph" do
       propositions_path = File.expand_path("../support/human_lab_data_propositions.txt", File.dirname(__FILE__))
       prop = PropositionsToGraph.new(propositions_path)
-      prop.graph
+      g = prop.graph
     end
   end
 
