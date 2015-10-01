@@ -6,7 +6,7 @@ module Cmap; describe GraphToSql do
     it "runs the queries in the right order" do
       propositions_path = File.expand_path("../support/human_lab_data_propositions.txt", File.dirname(__FILE__))
       prop = PropositionsToGraph.new(propositions_path)
-      to_sql = GraphToSql.new("human_lab_data", prop.graph, {dbname: "messing_around"})
+      to_sql = GraphToSql.new("human_lab_data", prop.graph, {dbname: "cmap_test"})
 
       to_sql.connection.exec("DROP TABLE IF EXISTS human_lab_data;")
       to_sql.connection.exec("CREATE TABLE human_lab_data ( age integer, nationality text );")
@@ -18,7 +18,7 @@ module Cmap; describe GraphToSql do
     it "runs complicated queries in the right order" do
       propositions_path = File.expand_path("../support/complicated_propositions.txt", File.dirname(__FILE__))
       prop = PropositionsToGraph.new(propositions_path)
-      to_sql = GraphToSql.new("human_lab_data", prop.graph, {dbname: "messing_around"})
+      to_sql = GraphToSql.new("human_lab_data", prop.graph, {dbname: "cmap_test"})
 
       to_sql.connection.exec("DROP TABLE IF EXISTS human_lab_data;")
       to_sql.connection.exec("CREATE TABLE human_lab_data ( age integer, nationality text );")
