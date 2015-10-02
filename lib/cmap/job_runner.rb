@@ -2,16 +2,23 @@ require 'tsort'
 
 module Cmap; class JobRunner
 
-  include TSort
-
-  def initialize()
-    @jobs = Hash.new{|h,k| h[k] = []}
+  def self.create_runner(vertices_and_children)
+    runner = JobRunner.new
+    vertices_and_children.each do |v, c|
+      runner.add(v, c)
+    end
+    runner
   end
 
-  alias_method :execute, :tsort
+  def self.sorted_vertices(vertices_and_children)
+    runner = create_runner(vertices_and_children)
+    runner.tsort.reverse
+  end
 
-  def execution_path
-    execute.reverse
+  include TSort
+
+  def initialize
+    @jobs = Hash.new{|h,k| h[k] = []}
   end
 
   def add(name, dependencies=[])
