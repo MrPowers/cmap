@@ -25,11 +25,10 @@ module Cmap; class PropositionsToGraph
   end
 
   def vertices
-    r = []
-    edges.each do |e|
-      r.push(e.origin_vertex, e.destination_vertex)
-    end
-    r.uniq
+    edges.inject([]) do |memo, e|
+      memo.push(e.origin_vertex, e.destination_vertex)
+      memo
+    end.uniq
   end
 
 end; end

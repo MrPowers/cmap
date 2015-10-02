@@ -1,0 +1,8 @@
+human_lab_data	age < 12	kids
+seniors	seniors = 1 and american = 1	senior_americans
+human_lab_data	nationality = 'american'	american
+american	nationality = 'american' and 90D	recently_created_american
+recently_created_american	kids=1 AND recently_created_american =1	kid_recently_created_american
+kids	kids=1 AND recently_created_american =1	kid_recently_created_american
+human_lab_data	age > 65	seniors
+american	seniors = 1 and american = 1	senior_americans

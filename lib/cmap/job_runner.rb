@@ -10,6 +10,10 @@ module Cmap; class JobRunner
 
   alias_method :execute, :tsort
 
+  def execution_path
+    execute.reverse
+  end
+
   def add(name, dependencies=[])
     @jobs[name] = dependencies
   end
@@ -20,10 +24,6 @@ module Cmap; class JobRunner
 
   def tsort_each_child(node, &block)
     @jobs[node].each(&block) if @jobs.has_key?(node)
-  end
-
-  def execution_path
-    execute.reverse
   end
 
 end; end

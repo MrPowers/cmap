@@ -9,6 +9,16 @@ module Cmap
       @edges = edges
     end
 
+    def ordered_edges
+      job_runner.execution_path.inject([]) do |memo, v|
+        edge = edges.find {|e| e.destination_vertex == v}
+        memo << edge if edge
+        memo
+      end
+    end
+
+    private
+
     def children(vertex)
       edges.select {|e| e.origin_vertex == vertex}.map{|e| e.destination_vertex}
     end
@@ -29,15 +39,6 @@ module Cmap
       job_runner.execution_path
     end
 
-    def ordered_edges
-      job_runner.execution_path.inject([]) do |memo, v|
-        edge = edges.find {|e| e.destination_vertex == v}
-        memo << edge if edge
-        memo
-      end
-    end
-
   end
-
 
 end
