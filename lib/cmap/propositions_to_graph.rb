@@ -7,7 +7,7 @@ module Cmap; class PropositionsToGraph
   end
 
   def graph
-    Graph.new(vertices, edges)
+    DirectedGraph::Graph.new(edges)
   end
 
   private
@@ -19,16 +19,10 @@ module Cmap; class PropositionsToGraph
 
   def edges
     @edges ||= propositions.inject([]) do |memo, e|
-      memo << Edge.new(*e)
+      origin_vertex, value, destination_vertex = e
+      memo << DirectedGraph::Edge.new(origin_vertex, destination_vertex, value)
       memo
     end
-  end
-
-  def vertices
-    edges.inject([]) do |memo, e|
-      memo.push(e.origin_vertex, e.destination_vertex)
-      memo
-    end.uniq
   end
 
 end; end

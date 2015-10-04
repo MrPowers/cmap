@@ -32,10 +32,14 @@ module Cmap; class GraphToSql
   end
 
   def queries
-    graph.ordered_edges.inject([]) do |memo, edge|
+    edges.inject([]) do |memo, edge|
       memo.push(edge_to_query(edge))
       memo
     end
+  end
+
+  def edges
+    graph.ordered_edges.uniq {|e| [e.destination_vertex, e.value]}
   end
 
 end; end

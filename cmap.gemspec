@@ -26,4 +26,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "pg", "0.18.3"
   spec.add_dependency "pry"
   spec.add_dependency "simple-graph"
+  spec.add_dependency "directed_graph"
 end
