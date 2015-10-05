@@ -4,11 +4,11 @@ The cmap gem converts the 'Propositions to Text' export file into a directed gra
 
 Suppose we start with the following directed graph:
 
-![](https://github.com/MrPowers/cmap/blob/master/example/cmap_example.png)
+![](https://github.com/MrPowers/cmap/blob/master/pictures/cmap_example.png)
 
 And the following starting database state:
 
-![](https://github.com/MrPowers/cmap/blob/master/example/db_starting.png)
+![](https://github.com/MrPowers/cmap/blob/master/pictures/db_starting.png)
 
 cmaps can be exported as a tab delimited text file of the graph edges with the "Propositions to Text" option.  The `Cmap::PropositionsToGraph` is meant to be instantiated with the path to one of these "Propositions to Text" exports.
 
@@ -32,7 +32,7 @@ to_sql.run_queries
 
 The `#run_queries` method add columns to the `human_lab_data` table to generate the profiles.
 
-![](https://github.com/MrPowers/cmap/blob/master/example/db_ending.png)
+![](https://github.com/MrPowers/cmap/blob/master/pictures/db_ending.png)
 
 ## Installation
 
