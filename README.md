@@ -1,8 +1,38 @@
 # Cmap
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/cmap`. To experiment with that code, run `bin/console` for an interactive prompt.
+The cmap gem converts the 'Propositions to Text' export file into a directed graph data structure.  The graph can then be converted into a series of postgres SQL queries to generate profiles.
 
-TODO: Delete this and the text above, and describe your gem
+Suppose we start with the following directed graph:
+
+![](https://github.com/MrPowers/cmap/blob/master/example/cmap_example.png)
+
+And the following starting database state:
+
+![](https://github.com/MrPowers/cmap/blob/master/example/db_starting.png)
+
+cmaps can be exported as a tab delimited text file of the graph edges with the "Propositions to Text" option.  The `Cmap::PropositionsToGraph` is meant to be instantiated with the path to one of these "Propositions to Text" exports.
+
+```ruby
+propositions_to_graph = Cmap::PropositionsToGraph.new("/path/to/propositions_to_text_file")
+propositions_to_graph.graph # a DirectedGraph::Graph object
+```
+
+The `GraphToSql` class is instantiated with the `DirectedGraph::Graph` object and converts the graph to an array of SQL queries:
+
+```ruby
+propositions_to_graph = Cmap::PropositionsToGraph.new("/path/to/propositions_to_text_file")
+today = "'2015-01-01'"
+gsubs = [["90D", "created_at > DATE(#{today}) - interval '90' day"]]
+to_sql = GraphToSql.new("human_lab_data", propositions_to_graph.graph, {dbname: "cmap_test"}, gsubs)
+
+# the database must be seeded with the starting data first
+
+to_sql.run_queries
+```
+
+The `#run_queries` method add columns to the `human_lab_data` table to generate the profiles.
+
+![](https://github.com/MrPowers/cmap/blob/master/example/db_ending.png)
 
 ## Installation
 
@@ -12,27 +42,15 @@ Add this line to your application's Gemfile:
 gem 'cmap'
 ```
 
-And then execute:
+And then require the gem in your project:
 
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install cmap
-
-## Usage
-
-TODO: Write usage instructions here
-
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake rspec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+```ruby
+require 'cmap'
+```
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/cmap.
+Bug reports and pull requests are welcome on GitHub at https://github.com/MrPowers/cmap.
 
 
 ## License
