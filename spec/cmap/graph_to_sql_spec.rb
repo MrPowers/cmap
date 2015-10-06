@@ -38,8 +38,9 @@ module Cmap; describe GraphToSql do
       propositions_path = File.expand_path("../support/propositions_w_gsubs.txt", File.dirname(__FILE__))
       prop = PropositionsToGraph.new(propositions_path)
       today = "'2015-01-01'"
-      gsubs = [["90D", "created_at > DATE(#{today}) - interval '90' day"]]
-      to_sql = GraphToSql.new("human_lab_data", prop.graph, gsubs)
+      query_gsubs = [["90D", "created_at > DATE(#{today}) - interval '90' day"]]
+      column_gsubs = [[/\s/, "_"]]
+      to_sql = GraphToSql.new("human_lab_data", prop.graph, query_gsubs, column_gsubs)
       runner = SqlRunner.new({dbname: "cmap_test"})
       connection = runner.connection
 

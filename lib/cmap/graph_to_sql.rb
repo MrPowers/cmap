@@ -1,11 +1,12 @@
 module Cmap; class GraphToSql
 
-  attr_reader :table_name, :graph, :gsubs
+  attr_reader :table_name, :graph, :query_gsubs, :column_gsubs
 
-  def initialize(table_name, graph, gsubs = [])
+  def initialize(table_name, graph, query_gsubs = [], column_gsubs = [])
     @table_name = table_name
     @graph = graph
-    @gsubs = gsubs
+    @query_gsubs = query_gsubs
+    @column_gsubs = column_gsubs
   end
 
   def queries
@@ -18,10 +19,22 @@ module Cmap; class GraphToSql
   private
 
   def edge_to_query(edge)
-    column = edge.destination_vertex
-    query = edge.value
-    q = "alter table #{table_name} add column #{column} int2; update #{table_name} set #{column} = 1 where (#{query});"
-    gsubs.each do |gsub|
+    c = column(edge)
+    q = query(edge)
+    "alter table #{table_name} add column #{c} int2; update #{table_name} set #{c} = 1 where (#{q});"
+  end
+
+  def column(edge)
+    c = edge.destination_vertex
+    column_gsubs.each do |gsub|
+      c = c.gsub(*gsub)
+    end
+    c
+  end
+
+  def query(edge)
+    q = edge.value
+    query_gsubs.each do |gsub|
       q = q.gsub(*gsub)
     end
     q
