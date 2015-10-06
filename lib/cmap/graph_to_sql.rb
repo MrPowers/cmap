@@ -1,22 +1,18 @@
 module Cmap; class GraphToSql
 
-  attr_reader :table_name, :graph, :db_config, :gsubs
+  attr_reader :table_name, :graph, :gsubs
 
-  def initialize(table_name, graph, db_config, gsubs = [])
+  def initialize(table_name, graph, gsubs = [])
     @table_name = table_name
     @graph = graph
-    @db_config = db_config
     @gsubs = gsubs
   end
 
-  def run_queries
-    queries.each do |q|
-      connection.exec(q)
+  def queries
+    edges.inject([]) do |memo, edge|
+      memo.push(edge_to_query(edge))
+      memo
     end
-  end
-
-  def connection
-    @connection ||= PGconn.connect(db_config)
   end
 
   private
@@ -29,13 +25,6 @@ module Cmap; class GraphToSql
       q = q.gsub(*gsub)
     end
     q
-  end
-
-  def queries
-    edges.inject([]) do |memo, edge|
-      memo.push(edge_to_query(edge))
-      memo
-    end
   end
 
   def edges

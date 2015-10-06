@@ -23,14 +23,21 @@ The `GraphToSql` class is instantiated with the `DirectedGraph::Graph` object an
 propositions_to_graph = Cmap::PropositionsToGraph.new("/path/to/propositions_to_text_file")
 today = "'2015-01-01'"
 gsubs = [["90D", "created_at > DATE(#{today}) - interval '90' day"]]
-to_sql = GraphToSql.new("human_lab_data", propositions_to_graph.graph, {dbname: "cmap_test"}, gsubs)
+to_sql = GraphToSql.new("human_lab_data", propositions_to_graph.graph, gsubs)
 
-# the database must be seeded with the starting data first
+to_sql.run_queries # returns the following array
 
-to_sql.run_queries
+[
+  "alter table human_lab_data add column seniors int2; update human_lab_data set seniors = 1 where (age > 65);",
+  "alter table human_lab_data add column american int2; update human_lab_data set american = 1 where (nationality = 'american');",
+  "alter table human_lab_data add column senior_americans int2; update human_lab_data set senior_americans = 1 where (seniors = 1 and american = 1);",
+  "alter table human_lab_data add column recently_created_american int2; update human_lab_data set recently_created_american = 1 where (nationality = 'american' and created_at > DATE('2015-01-01') - interval '90' day);",
+  "alter table human_lab_data add column kids int2; update human_lab_data set kids = 1 where (age < 12);",
+  "alter table human_lab_data add column kid_recently_created_american int2; update human_lab_data set kid_recently_created_american = 1 where (kids=1 AND recently_created_american =1);"
+]
 ```
 
-The `#run_queries` method add columns to the `human_lab_data` table to generate the profiles.
+The `SqlRunner` class can be used to actually run the queries and generate the profiles in the database.
 
 ![](https://github.com/MrPowers/cmap/blob/master/pictures/db_ending.png)
 
