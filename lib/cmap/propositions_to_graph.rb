@@ -1,9 +1,11 @@
 module Cmap; class PropositionsToGraph
 
-  attr_reader :propositions_path
+  attr_reader :propositions_path, :value_gsubs, :vertex_gsubs
 
-  def initialize(propositions_path)
+  def initialize(propositions_path, value_gsubs = [], vertex_gsubs = [])
     @propositions_path = propositions_path
+    @value_gsubs = value_gsubs
+    @vertex_gsubs = vertex_gsubs
   end
 
   def graph
@@ -20,9 +22,19 @@ module Cmap; class PropositionsToGraph
   def edges
     @edges ||= propositions.inject([]) do |memo, e|
       origin_vertex, value, destination_vertex = e
-      memo << DirectedGraph::Edge.new(origin_vertex, destination_vertex, value)
+      o = gsubber(vertex_gsubs, origin_vertex)
+      d = gsubber(vertex_gsubs, destination_vertex)
+      v = gsubber(value_gsubs, value)
+      memo << DirectedGraph::Edge.new(o, d, v)
       memo
     end
+  end
+
+  def gsubber(gsubs, string)
+    gsubs.each do |gsub|
+      string = string.gsub(*gsub)
+    end
+    string
   end
 
 end; end

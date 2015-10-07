@@ -1,47 +1,33 @@
 module Cmap; class GraphToSql
 
-  attr_reader :table_name, :graph, :query_gsubs, :column_gsubs
+  attr_reader :table_name, :graph
 
-  def initialize(table_name, graph, query_gsubs = [], column_gsubs = [])
+  def initialize(table_name, graph)
     @table_name = table_name
     @graph = graph
-    @query_gsubs = query_gsubs
-    @column_gsubs = column_gsubs
   end
 
   def queries
-    edges.inject([]) do |memo, edge|
-      memo.push(edge_to_query(edge))
+    grouped_edges.inject([]) do |memo, (_, edges)|
+      memo += (edges_to_queries(edges))
       memo
     end
   end
 
   private
 
-  def edge_to_query(edge)
-    c = column(edge)
-    q = query(edge)
-    "alter table #{table_name} add column #{c} int2; update #{table_name} set #{c} = 1 where (#{q});"
+  def grouped_edges
+    graph.edges.group_by {|e| graph.longest_path(table_name, e.destination_vertex).length}
   end
 
-  def column(edge)
-    c = edge.destination_vertex
-    column_gsubs.each do |gsub|
-      c = c.gsub(*gsub)
-    end
-    c
-  end
-
-  def query(edge)
-    q = edge.value
-    query_gsubs.each do |gsub|
-      q = q.gsub(*gsub)
-    end
-    q
-  end
-
-  def edges
-    graph.ordered_edges.uniq {|e| [e.destination_vertex, e.value]}
+  def edges_to_queries(edges)
+    unique_edges = edges.uniq {|e| [e.destination_vertex, e.value]}
+    add_columns = unique_edges.map {|e| "add column #{e.destination_vertex} int2"}.join(", ")
+    updates = unique_edges.map {|e| "#{e.destination_vertex}=(#{e.value})::int"}.join(", ")
+    [
+      "alter table #{table_name} #{add_columns};",
+      "update #{table_name} set #{updates};"
+    ]
   end
 
 end; end
