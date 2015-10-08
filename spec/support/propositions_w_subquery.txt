@@ -3,10 +3,10 @@ irish parent	kids=1 AND irish_parent =1	kid with irish parent
 american parent	kids=1 AND american_parent =1	kid with american parent
 seniors	seniors = 1 and american = 1	senior_americans
 irish	parent_is	irish parent
-human_lab_data	age < 18	kids
-american	seniors = 1 and american = 1	senior_americans
+Human Lab Data	age < 18	kids
+American	seniors = 1 and american = 1	senior_americans
 american	parent_is	american parent
 human_lab_data	nationality = 'ireland'	irish
 human_lab_data	age > 65	seniors
 human_lab_data	nationality = 'american'	american
-kids	kids=1 AND american_parent =1	kid with american parent
+kids	kids=1 AND american parent =1	kid with american parent
