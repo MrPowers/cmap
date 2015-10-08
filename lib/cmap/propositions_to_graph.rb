@@ -1,10 +1,9 @@
 module Cmap; class PropositionsToGraph
 
-  attr_reader :propositions_path, :value_gsubs, :vertex_gsubs
+  attr_reader :propositions_path, :vertex_gsubs
 
-  def initialize(propositions_path, value_gsubs = [], vertex_gsubs = [])
+  def initialize(propositions_path, vertex_gsubs = [])
     @propositions_path = propositions_path
-    @value_gsubs = value_gsubs
     @vertex_gsubs = vertex_gsubs
   end
 
@@ -24,8 +23,7 @@ module Cmap; class PropositionsToGraph
       origin_vertex, value, destination_vertex = e
       o = gsubber(vertex_gsubs, origin_vertex)
       d = gsubber(vertex_gsubs, destination_vertex)
-      v = gsubber(value_gsubs, value)
-      memo << DirectedGraph::Edge.new(o, d, v)
+      memo << DirectedGraph::Edge.new(o, d, value)
       memo
     end
   end

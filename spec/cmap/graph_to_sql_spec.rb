@@ -7,7 +7,7 @@ module Cmap; describe GraphToSql do
     it "runs the queries in the right order" do
       propositions_path = File.expand_path("../support/human_lab_data_propositions.txt", File.dirname(__FILE__))
       prop = PropositionsToGraph.new(propositions_path)
-      to_sql = GraphToSql.new("human_lab_data", prop.graph, )
+      to_sql = GraphToSql.new("human_lab_data", prop.graph)
       runner = SqlRunner.new({dbname: "cmap_test"})
       connection = runner.connection
 
@@ -35,12 +35,12 @@ module Cmap; describe GraphToSql do
     end
 
     it "runs queries with gsubs when needed" do
-      propositions_path = File.expand_path("../support/propositions_w_gsubs.txt", File.dirname(__FILE__))
-      today = "'2015-01-01'"
-      query_gsubs = [["90D", "created_at > DATE(#{today}) - interval '90' day"]]
+      propositions_path = File.expand_path("../support/propositions_w_subquery.txt", File.dirname(__FILE__))
+      subquery = "update +table_name+ set +destination_vertex+=(select max(+origin_vertex+) FROM +table_name+ t2 where +table_name+.parent_id = t2.id)::int;"
+      query_gsubs = [["parent_is", subquery]]
       column_gsubs = [[/\s/, "_"]]
-      prop = PropositionsToGraph.new(propositions_path, query_gsubs, column_gsubs)
-      to_sql = GraphToSql.new("human_lab_data", prop.graph)
+      prop = PropositionsToGraph.new(propositions_path, column_gsubs)
+      to_sql = GraphToSql.new("human_lab_data", prop.graph, query_gsubs)
 
       runner = SqlRunner.new({dbname: "cmap_test"})
       connection = runner.connection
@@ -49,7 +49,7 @@ module Cmap; describe GraphToSql do
 
       runner.run_queries(to_sql.queries)
 
-      r = connection.exec("select sum(kid_recently_created_american) as american_kids from human_lab_data;").first["american_kids"]
+      r = connection.exec("select sum(kid_with_american_parent) as kid_with_american_parent from human_lab_data;").first["kid_with_american_parent"]
       expect(r).to eq "2"
     end
 
