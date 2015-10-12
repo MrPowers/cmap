@@ -1,21 +1,25 @@
 module Cmap; class GraphToSql
 
-  attr_reader :table_name, :graph, :query_gsubs
+  attr_reader :table_name, :graph, :subquery_gsubs
 
-  def initialize(table_name, graph, query_gsubs = [])
+  def initialize(table_name, graph, subquery_gsubs = [])
     @table_name = table_name
     @graph = graph
-    @query_gsubs = query_gsubs
+    @subquery_gsubs = subquery_gsubs
   end
 
   def queries
     sorted_grouped_edges.inject([]) do |memo, (_, edges)|
-      memo += (EdgesToQueries.new(edges, table_name, query_gsubs).queries)
+      memo += (EdgesToQueries.new(edges, table_name, subquery_expander).queries)
       memo
     end
   end
 
   private
+
+  def subquery_expander
+    SubqueryExpander.new(table_name: table_name, subquery_gsubs: subquery_gsubs)
+  end
 
   def sorted_grouped_edges
     Hash[grouped_edges.sort]

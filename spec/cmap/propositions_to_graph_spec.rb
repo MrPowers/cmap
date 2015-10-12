@@ -11,8 +11,8 @@ module Cmap; describe PropositionsToGraph do
 
     it "returns all the graph vertices when there are gsubs" do
       propositions_path = File.expand_path("../support/propositions_w_gsubs.txt", File.dirname(__FILE__))
-      prop = PropositionsToGraph.new(propositions_path, [[/\s/, "_"]])
-      expected = ["american", "human_lab_data", "kid_recently_created_american", "kids", "recently_created_american", "senior_americans", "seniors"]
+      prop = PropositionsToGraph.new(propositions_path)
+      expected = ["american", "human_lab_data", "human lab data", "kid_recently_created_american", "kids", "recently_created_american", "recently created american", "senior_americans", "seniors"]
       expect(prop.graph.send(:vertices)).to match_array expected
     end
   end

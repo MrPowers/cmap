@@ -9,4 +9,4 @@ american	parent_is	american parent
 human_lab_data	nationality = 'ireland'	irish
 human_lab_data	age > 65	seniors
 human_lab_data	nationality = 'american'	american
-kids	kids=1 AND american parent =1	kid with american parent
+kids	kids=1 AND american_parent =1	kid with american parent
