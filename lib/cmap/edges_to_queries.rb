@@ -9,9 +9,9 @@ module Cmap; class EdgesToQueries
   end
 
   def queries
-    ["alter table #{table_name} #{add_columns_query};"] +
+    add_columns_queries +
     gsub_subqueries +
-    ["update #{table_name} set #{updates};"]
+    updates
     .delete_if {|q| q.empty?}
   end
 
@@ -21,8 +21,8 @@ module Cmap; class EdgesToQueries
     edges.uniq {|e| [e.destination_vertex, e.value]}
   end
 
-  def add_columns_query
-    unique_edges.map {|e| "add column #{e.destination_vertex} int2"}.join(", ")
+  def add_columns_queries
+    unique_edges.map {|e| "alter table #{table_name} add column #{e.destination_vertex} int2;"}
   end
 
   def grouped_edges
@@ -34,7 +34,9 @@ module Cmap; class EdgesToQueries
   end
 
   def updates
-    (grouped_edges[false] || []).map {|e| "#{e.destination_vertex}=(#{e.value})::int"}.join(", ")
+    u = (grouped_edges[false] || []).map {|e| "#{e.destination_vertex}=(#{e.value})::int"}.join(", ")
+    return [] if u.empty?
+    ["update #{table_name} set #{u};"]
   end
 
 end; end

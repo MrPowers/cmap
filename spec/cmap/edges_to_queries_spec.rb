@@ -12,7 +12,8 @@ module Cmap; describe EdgesToQueries do
       expander = SubqueryExpander.new(table_name: "some_table", subquery_gsubs: subquery_gsubs)
 
       edges_to_queries = EdgesToQueries.new([e1, e2], "some_table", expander)
-      expect(edges_to_queries.queries).to eq ["alter table some_table add column dv int2, add column ok int2;", "some some_table from dv to ov", "update some_table set ok=(some query that isn't changed;)::int;"]
+      expected = ["alter table some_table add column dv int2;", "alter table some_table add column ok int2;", "some some_table from dv to ov", "update some_table set ok=(some query that isn't changed;)::int;"]
+      expect(edges_to_queries.queries).to eq expected
     end
   end
 
