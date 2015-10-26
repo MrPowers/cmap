@@ -15,10 +15,10 @@ module Cmap; class GraphSanitizer
     graph.edges.map do |edge|
       origin_vertex = sanitize_string(edge.origin_vertex)
       destination_vertex = sanitize_string(edge.destination_vertex)
-      
+
       @sanitized_vertex_lookup[edge.origin_vertex] = origin_vertex
       @sanitized_vertex_lookup[edge.destination_vertex] = destination_vertex
-      
+
       {origin_vertex: origin_vertex, destination_vertex: destination_vertex, value: edge.value}
     end
   end
