@@ -1,9 +1,10 @@
 module Helpers
   def seed_human_lab_data(connection)
-    connection.exec("DROP TABLE IF EXISTS human_lab_data;")
-    connection.exec("CREATE TABLE human_lab_data (id integer, age integer, nationality text, created_at date, parent_id integer );")
+    connection.exec("CREATE SCHEMA IF NOT EXISTS some_schema;")
+    connection.exec("DROP TABLE IF EXISTS some_schema.human_lab_data;")
+    connection.exec("CREATE TABLE some_schema.human_lab_data (id integer, age integer, nationality text, created_at date, parent_id integer );")
     add_data_query = %q{
-      INSERT INTO human_lab_data (id, age, nationality, created_at,parent_id) VALUES
+      INSERT INTO some_schema.human_lab_data (id, age, nationality, created_at,parent_id) VALUES
       (1,66, 'american', '2013-09-01',null),
       (2,69, 'american', '2015-09-01',null),
       (3,10, 'american', '2013-09-01',1),

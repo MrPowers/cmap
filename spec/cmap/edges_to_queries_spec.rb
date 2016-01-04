@@ -9,10 +9,10 @@ module Cmap; describe EdgesToQueries do
 
       subquery_gsubs = [["90D", "some +table_name+ from +destination_vertex+ to +origin_vertex+"]]
 
-      expander = SubqueryExpander.new(table_name: "some_table", subquery_gsubs: subquery_gsubs)
+      expander = SubqueryExpander.new(table_name: "some_table", schema_name: "schema_name", subquery_gsubs: subquery_gsubs)
 
-      edges_to_queries = EdgesToQueries.new([e1, e2], "some_table", expander)
-      expected = ["alter table some_table add column dv int2;", "alter table some_table add column ok int2;", "some some_table from dv to ov", "update some_table set ok=(some query that isn't changed;)::int;"]
+      edges_to_queries = EdgesToQueries.new([e1, e2], "some_table", "schema_name", expander)
+      expected = ["alter table schema_name.some_table add column dv int2;", "alter table schema_name.some_table add column ok int2;", "some some_table from dv to ov", "update schema_name.some_table set ok=(some query that isn't changed;)::int;"]
       expect(edges_to_queries.queries).to eq expected
     end
   end
