@@ -1,10 +1,11 @@
 module Cmap; class EdgesToQueries
 
-  attr_reader :edges, :table_name, :subquery_expander
+  attr_reader :edges, :table_name, :schema_name, :subquery_expander
 
-  def initialize(edges, table_name, subquery_expander)
+  def initialize(edges, table_name, schema_name, subquery_expander)
     @edges = edges
     @table_name = table_name
+    @schema_name = schema_name
     @subquery_expander = subquery_expander
   end
 
@@ -22,7 +23,7 @@ module Cmap; class EdgesToQueries
   end
 
   def add_columns_queries
-    unique_edges.map {|e| "alter table #{table_name} add column #{e.destination_vertex} int2;"}
+    unique_edges.map {|e| "alter table #{schema_name}.#{table_name} add column #{e.destination_vertex} int2;"}
   end
 
   def grouped_edges
@@ -36,7 +37,7 @@ module Cmap; class EdgesToQueries
   def updates
     u = (grouped_edges[false] || []).map {|e| "#{e.destination_vertex}=(#{e.value})::int"}.join(", ")
     return [] if u.empty?
-    ["update #{table_name} set #{u};"]
+    ["update #{schema_name}.#{table_name} set #{u};"]
   end
 
 end; end

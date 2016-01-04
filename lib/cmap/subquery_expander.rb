@@ -1,9 +1,10 @@
 module Cmap; class SubqueryExpander
 
-  attr_reader :table_name, :subquery_gsubs
+  attr_reader :table_name, :schema_name, :subquery_gsubs
 
   def initialize(args)
     @table_name = args.fetch(:table_name)
+    @schema_name = args.fetch(:schema_name)
     @subquery_gsubs = args.fetch(:subquery_gsubs, [])
   end
 
@@ -13,7 +14,7 @@ module Cmap; class SubqueryExpander
 
   def query(edge)
     r = edge.value
-    replacements = [["+table_name+", table_name], ["+destination_vertex+", edge.destination_vertex], ["+origin_vertex+", edge.origin_vertex]]
+    replacements = [["+table_name+", table_name], ["+schema_name+", schema_name], ["+destination_vertex+", edge.destination_vertex], ["+origin_vertex+", edge.origin_vertex]]
     (subquery_gsubs + replacements).each {|gsub| r = r.gsub(*gsub)}
     r
   end
