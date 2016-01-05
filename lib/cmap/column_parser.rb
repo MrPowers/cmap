@@ -1,6 +1,6 @@
 module Cmap; class ColumnParser
 
-  DETECT_KEY = "_:_"
+  DETECT_KEY_REGEX = /_?[:]_?/
 
   def initialize(original_name)
     @original_name = original_name
@@ -17,15 +17,12 @@ module Cmap; class ColumnParser
   private
 
   def parse_input(position_key, default_value)
-    detected = @original_name.include?(DETECT_KEY)
+    key_detected = DETECT_KEY_REGEX.match(@original_name)
+    return default_value unless key_detected
 
-    if detected
-      sections = @original_name.split(DETECT_KEY)
-      if sections.count == 2
-        sections.send(position_key)
-      else
-        default_value
-      end
+    sections = @original_name.split(DETECT_KEY_REGEX)
+    if sections.count == 2
+      sections.send(position_key)
     else
       default_value
     end

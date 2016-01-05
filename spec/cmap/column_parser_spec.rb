@@ -10,6 +10,15 @@ module Cmap; describe ColumnParser do
       expect(cp.column).to eql("value_total")
     end
 
+    it "removes the denoted character (with alternative space formatting) and the subsequent text" do
+      alternative_spacing_formats = ["value_total:real", "value_total:_real", "value_total_:real"]
+
+      alternative_spacing_formats.each do |column_name|
+        cp = ColumnParser.new(column_name)
+        expect(cp.column).to eql("value_total")
+      end
+    end
+
     it "returns the original column name if no denoted character is found" do
       column_name = "value_total"
       cp = ColumnParser.new(column_name)
