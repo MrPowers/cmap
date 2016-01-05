@@ -22,7 +22,7 @@ module Cmap; class PropositionsToSql
   end
 
   def sanitized_graph
-    GraphSanitizer.new(raw_graph).sanitized_graph
+    GraphSanitizer.new(raw_graph).sanitize
   end
 
   def graph_to_sql
