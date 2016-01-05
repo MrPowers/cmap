@@ -9,12 +9,17 @@ module Cmap; class SubqueryExpander
   end
 
   def update_query?(edge)
-    edge.data[:sanitized_value] != query(edge)
+    edge.data[:value] != query(edge)
   end
 
   def query(edge)
-    r = edge.data[:sanitized_value]
-    replacements = [["+table_name+", table_name], ["+schema_name+", schema_name], ["+destination_vertex+", edge.destination_vertex], ["+origin_vertex+", edge.origin_vertex]]
+    r = edge.data[:value]
+    replacements = [
+      ["+table_name+", table_name],
+      ["+schema_name+", schema_name],
+      ["+destination_vertex+", edge.destination_vertex.data[:name]],
+      ["+origin_vertex+", edge.origin_vertex.data[:name]]
+    ]
     (subquery_gsubs + replacements).each {|gsub| r = r.gsub(*gsub)}
     r
   end

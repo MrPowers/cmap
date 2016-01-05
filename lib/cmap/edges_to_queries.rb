@@ -19,11 +19,11 @@ module Cmap; class EdgesToQueries
   private
 
   def unique_edges
-    edges.uniq {|e| [e.destination_vertex.data[:sanitized_name], e.data[:sanitized_value]]}
+    edges.uniq {|e| [e.destination_vertex.data[:name], e.data[:value]]}
   end
 
   def add_columns_queries
-    unique_edges.map {|e| "alter table #{schema_name}.#{table_name} add column #{e.destination_vertex.data[:sanitized_name]} int2;"}
+    unique_edges.map {|e| "alter table #{schema_name}.#{table_name} add column #{e.destination_vertex.data[:name]} int2;"}
   end
 
   def grouped_edges
@@ -35,7 +35,7 @@ module Cmap; class EdgesToQueries
   end
 
   def updates
-    u = (grouped_edges[false] || []).map {|e| "#{e.destination_vertex.data[:sanitized_name]}=(#{e.data[:sanitized_value]})::int"}.join(", ")
+    u = (grouped_edges[false] || []).map {|e| "#{e.destination_vertex.data[:name]}=(#{e.data[:value]})::int"}.join(", ")
     return [] if u.empty?
     ["update #{schema_name}.#{table_name} set #{u};"]
   end

@@ -21,12 +21,8 @@ module Cmap; class PropositionsToSql
     propositions_to_graph.graph
   end
 
-  def sanitized_graph
-    GraphSanitizer.new(raw_graph).sanitize
-  end
-
   def graph_to_sql
-    GraphToSql.new(table_name, schema_name, sanitized_graph, subquery_gsubs)
+    GraphToSql.new(table_name, schema_name, raw_graph, subquery_gsubs)
   end
 
 end; end

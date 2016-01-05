@@ -18,7 +18,8 @@ module Cmap; class PropositionsToGraph
       origin_vertex_name, value, destination_vertex_name = e
       origin_vertex = find_vertex_or_create(origin_vertex_name)
       destination_vertex = find_vertex_or_create(destination_vertex_name)
-      memo << DirectedGraph::Edge.new(origin_vertex: origin_vertex, destination_vertex: destination_vertex, value: value)
+      data = { :value => value }
+      memo << DirectedGraph::Edge.new(origin_vertex: origin_vertex, destination_vertex: destination_vertex, data: data)
       memo
     end
   end
@@ -26,7 +27,8 @@ module Cmap; class PropositionsToGraph
   def find_vertex_or_create(vertex_name)
     vertex = @vertices.find {|v| v.name == vertex_name}
     return vertex if vertex
-    v = DirectedGraph::Vertex.new(name: vertex_name)
+    data = { :name => vertex_name }
+    v = DirectedGraph::Vertex.new(name: vertex_name, data: data)
     @vertices << v
     v
   end
