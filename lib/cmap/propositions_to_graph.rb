@@ -4,20 +4,33 @@ module Cmap; class PropositionsToGraph
 
   def initialize(propositions_path)
     @propositions_path = propositions_path
+    @vertices = []
   end
 
   def graph
-    DirectedGraph::Graph.new(edges)
+    SanitizeGraph.new(DirectedGraph::Graph.new(edges)).sanitize
   end
 
   private
 
   def edges
     @edges ||= propositions.inject([]) do |memo, e|
-      origin_vertex, value, destination_vertex = e
-      memo << DirectedGraph::Edge.new(origin_vertex: origin_vertex, destination_vertex: destination_vertex, value: value)
+      origin_vertex_name, value, destination_vertex_name = e
+      origin_vertex = find_vertex_or_create(origin_vertex_name)
+      destination_vertex = find_vertex_or_create(destination_vertex_name)
+      data = { :value => value }
+      memo << DirectedGraph::Edge.new(origin_vertex: origin_vertex, destination_vertex: destination_vertex, data: data)
       memo
     end
+  end
+
+  def find_vertex_or_create(vertex_name)
+    vertex = @vertices.find {|v| v.name == vertex_name}
+    return vertex if vertex
+    data = { :name => vertex_name }
+    v = DirectedGraph::Vertex.new(name: vertex_name, data: data)
+    @vertices << v
+    v
   end
 
   def propositions
