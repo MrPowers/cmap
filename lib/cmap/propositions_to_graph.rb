@@ -4,6 +4,7 @@ module Cmap; class PropositionsToGraph
 
   def initialize(propositions_path)
     @propositions_path = propositions_path
+    @vertices = []
   end
 
   def graph
@@ -14,10 +15,20 @@ module Cmap; class PropositionsToGraph
 
   def edges
     @edges ||= propositions.inject([]) do |memo, e|
-      origin_vertex, value, destination_vertex = e
+      origin_vertex_name, value, destination_vertex_name = e
+      origin_vertex = find_vertex_or_create(origin_vertex_name)
+      destination_vertex = find_vertex_or_create(destination_vertex_name)
       memo << DirectedGraph::Edge.new(origin_vertex: origin_vertex, destination_vertex: destination_vertex, value: value)
       memo
     end
+  end
+
+  def find_vertex_or_create(vertex_name)
+    vertex = @vertices.find {|v| v.name == vertex_name}
+    return vertex if vertex
+    v = DirectedGraph::Vertex.new(name: vertex_name)
+    @vertices << v
+    v
   end
 
   def propositions
