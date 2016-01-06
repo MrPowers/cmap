@@ -35,7 +35,9 @@ module Cmap; class EdgesToQueries
   end
 
   def updates
-    u = (grouped_edges[false] || []).map {|e| "#{e.destination_vertex.data[:sanitized_name]}=(#{e.data[:sanitized_value]})::int"}.join(", ")
+    u = (grouped_edges[false] || []).map do |e|
+      "#{e.destination_vertex.data[:sanitized_name]}=(#{e.data[:sanitized_value]})::int"
+    end.join(", ")
     return [] if u.empty?
     ["update #{schema_name}.#{table_name} set #{u};"]
   end
