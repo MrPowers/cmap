@@ -8,7 +8,7 @@ module Cmap; class PropositionsToGraph
   end
 
   def graph
-    SanitizeGraph.new(DirectedGraph::Graph.new(edges)).sanitize
+    DirectedGraph::Graph.new(edges)
   end
 
   private
