@@ -1,10 +1,6 @@
 # Cmap
 
-The cmap gem converts the 'Propositions to Text' export file into a directed graph data structure.
-
-Suppose we start with the following directed graph:
-
-![](https://github.com/MrPowers/cmap/blob/master/pictures/cmap_example.png)
+The cmap gem converts the 'Propositions to Text' export file into a directed graph data structure (with the [directed_graph gem](https://github.com/mrpowers/directed_graph).
 
 cmaps can be exported as a tab delimited text file of the graph edges with the "Propositions to Text" option.  The `Cmap::PropositionsToGraph` is meant to be instantiated with the path to one of these "Propositions to Text" exports.
 
